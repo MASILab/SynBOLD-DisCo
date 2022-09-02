@@ -16,7 +16,7 @@
 
 This repository implements the paper "SynBOLD-DisCo: Synthetic BOLD images for distortion correction of fMRI without additional calibration scans". 
 
-This tool aims to enable susceptibility distortion correction with historical and/or limited datasets that do not include specific sequences for distortion correction (i.e. reverse phase-encoded scans). In short, we synthesize an "undistorted" BOLD image that matches the geometry of structural T1w images and also matches the contrast 
+This tool aims to enable susceptibility distortion correction with historical and/or limited datasets that do not include specific sequences for distortion correction (i.e. reverse phase-encoded scans). In short, we synthesize an "undistorted" BOLD image that matches the geometry of structural T1w images and also matches the contrast.
 We can then use this 'undistorted' image in standard pipelines (i.e. TOPUP) and tell the algorithm that this synthetic image has an infinite bandwidth. Note that the processing below enables both image synthesis, and also synthesis + full pipeline correction, if desired. 
 
 Please use the following citations to refer to this work:
@@ -24,8 +24,7 @@ Please use the following citations to refer to this work:
 Tian Yu, Leon Y. Cai, Victoria L. Morgan, Sarah E. Goodale, Dario J. Englot, Catherine E. Chang, Bennett A. Landman, and Kurt G. Schilling. "SynBOLD-DisCo: Synthetic BOLD images for distortion correction of fMRI without additional calibration scans". Submitted to SPIE Medical Imaging: Image Processing (2023).
 
 ## Dockerized Application
-
-For deployment we provide a [Docker container](https://hub.docker.com/repository/docker/yut7/synbold-disco) which uses the trained model to predict the undistorted BOLD image to be used in susceptability distortion correction for functional MRI. For those who prefer, Docker containers can be converted to Singularity containers (see below).
+For deployment we provide a [Docker container](https://hub.docker.com/repository/docker/ytzero/synbold-disco) which uses the trained model to predict the undistorted BOLD image to be used in susceptability distortion correction for functional MRI. For those who prefer, Docker containers can be converted to Singularity containers (see below).
 
 ## Docker Instructions:
 
@@ -35,7 +34,7 @@ sudo docker run --rm \
 -v $(pwd)/OUTPUTS:/OUTPUTS/ \
 -v <path to license.txt>:/extra/freesurfer/license.txt \
 --user $(id -u):$(id -g) \
-ytzero/synbold-disco:version1
+ytzero/synbold-disco:v1.1
 <flags>
 ```
 
@@ -46,10 +45,10 @@ ytzero/synbold-disco:version1
 
 ## Singularity Instructions
 
-First, build the synbold.simg container in the current directory:
+First, build the synbold.sif container in the current directory:
 
 ```
-singularity pull docker://ytzero/synbold-disco:version1
+singularity pull docker://ytzero/synbold-disco:v1.1
 ```
 
 Then, to run the synbold.sif container:
@@ -68,7 +67,7 @@ singularity run -e \
 
 ## Non-containerized Instructions
 
-If you choose to run this in bash, the primary script is located in src/pipeline.sh. The paths in pipeline.sh are specific to the docker/singularity file systems, but the processing can be replicated using the scripts in src. These utilize freesurfer, FSL, ANTS, MRtrix3 and a python environment with pytorch.
+If you choose to run this in bash, the primary script is located in src/pipeline.sh. The paths in pipeline.sh are specific to the docker/singularity file systems, but the processing can be replicated using the scripts in src. These utilize freesurfer, FSL, ANTS, MRtrix3 and a python environment with pytorch, numpy and nibabel.
 
 ## Flags:
 
@@ -87,7 +86,7 @@ The INPUTS directory must contain the following:
 * T1.nii.gz: the T1-weighted image
 * acqparams.txt: A text file that describes the acqusition parameters, and is described in detail on the FslWiki for topup (https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup). Briefly,
 it describes the direction of distortion and tells TOPUP that the synthesized image has an effective echo spacing of 0 (infinite bandwidth). An example acqparams.txt is
-displayed below, in which distortion is in the second dimension, note that the second row corresponds to the synthesized, undistorted, b0:
+displayed below, in which distortion is in the second dimension, note that the second row corresponds to the synthesized, undistorted, BOLD:
     ```
     $ cat acqparams.txt 
     0 1 0 0.062
@@ -106,10 +105,10 @@ After running, the OUTPUTS directory contains the following preprocessing files:
 * ANTS1Warp.nii.gz: Deformable ANTs registration of T1_norm to/from MNI space  
 * ANTS1InverseWarp.nii.gz: Inverse deformable ANTs registration of T1_norm to/from MNI space  
 * T1_norm_lin_atlas_2_5.nii.gz: linear transform T1 to MNI   
-* b0_d_lin_atlas_2_5.nii.gz: linear transform distorted BOLD in MNI space   
+* BOLD_d_3D_lin_atlas_2_5.nii.gz: linear transform distorted BOLD in MNI space   
 
 
-The OUTPUTS directory also contains inferences (predictions) for each of five folds utilizing T1_norm_lin_atlas_2_5.nii.gz and b0_d_lin_atlas_2_5.nii.gz as inputs:
+The OUTPUTS directory also contains inferences (predictions) for each of five folds utilizing T1_norm_lin_atlas_2_5.nii.gz and BOLD_d_3D_lin_atlas_2_5 as inputs:
 
 
 * BOLD_s_3D_lin_atlas_2_5_FOLD_1.nii.gz
@@ -122,7 +121,7 @@ The OUTPUTS directory also contains inferences (predictions) for each of five fo
 After inference the ensemble average is taken in atlas space:
 
 * BOLD_s_3D_lin_atlas_2_5_merged.nii.gz  
-* BOLD_s_lin_atlas_2_5.nii.gz         
+* BOLD_s_3D_lin_atlas_2_5.nii.gz         
 
 It is then moved to native space for the undistorted, synthetic output:
 
@@ -130,7 +129,7 @@ It is then moved to native space for the undistorted, synthetic output:
 
 The undistorted synthetic output, and a smoothed distorted input can then be stacked together for topup:
 
-* BOLD_3D_smooth.nii.gz: smoothed b0
+* BOLD_3D_smooth.nii.gz: smoothed BOLD
 * BOLD_all.nii.gz: stack of distorted and synthetized image as input to topup        
 
 Finally, the topup outputs to be used for eddy:
@@ -154,4 +153,4 @@ eddy --imain=path/to/diffusiondata.nii.gz --mask=path/to/brainmask.nii.gz \
 
 where imain is the original diffusion data, mask is a brain mask, acqparams is from before, index is the traditional eddy index file which contains an index (most likely a 1) for every volume in the diffusion dataset, topup points to the output of the singularity/docker pipeline, and out is the eddy-corrected images utilizing the field coefficients from the previous step.
 
-Alternatively, if you choose to run --notopup flag, the file you are interested in is b0_all. This is a concatenation of the real b0 and the synthesized undistorted b0. We run topup with this file, although you may chose to do so utilizing your topup version or config file. 
+Alternatively, if you choose to run --notopup flag, the file you are interested in is BOLD_all. This is a concatenation of the real BOLD and the synthesized undistorted BOLD. We run topup with this file, although you may chose to do so utilizing your topup version or config file. 

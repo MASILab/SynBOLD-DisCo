@@ -80,9 +80,9 @@ echo -------
 echo Skull stripping T1
 bet $T1_PATH ${RESULTS_PATH}/T1_mask.nii.gz -R
 
-# epi_reg distorted b0 to T1; wont be perfect since B0 is distorted
+# epi_reg distorted BOLD to T1; wont be perfect since BOLD is distorted
 echo -------
-echo epi_reg distorted b0 to T1
+echo epi_reg distorted BOLD to T1
 epi_reg --epi=$BOLD_d_3D --t1=$T1_PATH --t1brain=${RESULTS_PATH}/T1_mask.nii.gz --out=${RESULTS_PATH}/epi_reg_d
 
 # Convert FSL transform to ANTS transform
@@ -105,10 +105,10 @@ echo -------
 echo Apply linear transform to T1 N3
 antsApplyTransforms -d 3 -i ${RESULTS_PATH}/T1_N3.nii.gz -r $T1_ATLAS_2_5_PATH -n BSpline -t ${RESULTS_PATH}/ANTS0GenericAffine.mat -o ${RESULTS_PATH}/T1_N3_lin_atlas_2_5.nii.gz
 
-# Apply linear transform to distorted b0 to get it into atlas space
+# Apply linear transform to distorted BOLD to get it into atlas space
 echo -------
-echo Apply linear transform to distorted b0
-antsApplyTransforms -d 3 -i $BOLD_d_3D -r $T1_ATLAS_2_5_PATH -n BSpline -t ${RESULTS_PATH}/ANTS0GenericAffine.mat -t ${RESULTS_PATH}/epi_reg_d_ANTS.txt -o ${RESULTS_PATH}/b0_d_lin_atlas_2_5.nii.gz
+echo Apply linear transform to distorted BOLD
+antsApplyTransforms -d 3 -i $BOLD_d_3D -r $T1_ATLAS_2_5_PATH -n BSpline -t ${RESULTS_PATH}/ANTS0GenericAffine.mat -t ${RESULTS_PATH}/epi_reg_d_ANTS.txt -o ${RESULTS_PATH}/BOLD_d_3D_lin_atlas_2_5.nii.gz
 
 cd $RESULTS_PATH
 # Run inference
@@ -116,7 +116,7 @@ NUM_FOLDS=5
 for i in $(seq 1 $NUM_FOLDS);
 do 
   echo Performing inference on FOLD: "$i"
-  python3 /home/inference.py T1_norm_lin_atlas_2_5.nii.gz b0_d_lin_atlas_2_5.nii.gz BOLD_s_3D_lin_atlas_2_5_FOLD_$i.nii.gz $model_path/num_fold_${i}_total_folds_5_seed_1_num_epochs_120_lr_0.0001_betas_\(0.9,\ 0.999\)_weight_decay_1e-05_num_epoch_*.pth
+  python3 /home/inference.py T1_norm_lin_atlas_2_5.nii.gz BOLD_d_3D_lin_atlas_2_5.nii.gz BOLD_s_3D_lin_atlas_2_5_FOLD_$i.nii.gz $model_path/num_fold_${i}_total_folds_5_seed_1_num_epochs_120_lr_0.0001_betas_\(0.9,\ 0.999\)_weight_decay_1e-05_num_epoch_*.pth
 done
 
 # Take mean
@@ -124,12 +124,12 @@ echo Taking ensemble average
 fslmerge -t BOLD_s_3D_lin_atlas_2_5_merged.nii.gz BOLD_s_3D_lin_atlas_2_5_FOLD_*.nii.gz
 fslmaths BOLD_s_3D_lin_atlas_2_5_merged.nii.gz -Tmean BOLD_s_3D_lin_atlas_2_5.nii.gz
 
-# Apply inverse xform to undistorted b0
-echo Applying inverse xform to undistorted b0
+# Apply inverse xform to undistorted BOLD
+echo Applying inverse xform to undistorted BOLD
 antsApplyTransforms -d 3 -i BOLD_s_3D_lin_atlas_2_5.nii.gz -r $BOLD_d_3D -n BSpline -t [epi_reg_d_ANTS.txt,1] -t [ANTS0GenericAffine.mat,1] -o BOLD_s_3D.nii.gz
 
 # Smooth image
-echo Applying slight smoothing to distorted b0
+echo Applying slight smoothing to distorted BOLD
 fslmaths $BOLD_d_3D -s 1.15 BOLD_d_3D_smoothed.nii.gz
 
 fslmerge -t BOLD_all BOLD_d_3D_smoothed.nii.gz BOLD_s_3D.nii.gz
