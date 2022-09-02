@@ -10,7 +10,6 @@
 * [Flags](#flags)
 * [Inputs](#inputs)
 * [Outputs](#outputs)
-* [After Running](#after-running)
 
 ## Overview
 
@@ -78,11 +77,12 @@ Skip the application of FSL's topup susceptibility correction. As a default, we 
 
 **--motion_corrected**
 
-Lets the pipeline know that supplied distorted bold images has already been motion corrected. As a default, we motion correct the distorted image.
+Lets the pipeline know that supplied distorted bold image has already been motion corrected. As a default, we motion correct the distorted image.
 
 ## Inputs
 
 The INPUTS directory must contain the following:
+
 * BOLD_d.nii.gz: the BOLD image (either raw 4D, motion corrected 4D, or averaged 3D, see [Flags](#flags))
 * T1.nii.gz: the T1-weighted image
 * acqparams.txt: A text file that describes the acqusition parameters, and is described in detail on the FslWiki for topup (https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup). Briefly,
@@ -99,19 +99,16 @@ displayed below, in which distortion is in the second dimension, note that the s
 After running, the OUTPUTS directory contains the following preprocessing files:
 
 * BOLD_d_mc.nii.gz: motion corrected 4D input if not --motion_corrected, otherwise a copy of the input
-* BOLD_d_3D.nii.gz: average BOLD_d_mc image if input is 4D, otherwise a copy of the input
-
+* BOLD_d_3D.nii.gz: average of BOLD_d_mc.nii.gz if input is 4D, otherwise a copy of the input
 * T1_mask.nii.gz: brain extracted (skull-stripped) T1 if input is not stripped, otherwise a copy of the input
 * T1_norm.nii.gz: normalized T1
-
 * epi_reg_d.mat: epi_reg BOLD to T1 in FSL format
 * epi_reg_d_ANTS.txt: epi_reg to T1 in ANTS format
 * ANTS0GenericAffine.mat: Affine ANTs registration of T1_norm to/from MNI space
 * ANTS1Warp.nii.gz: Deformable ANTs registration of T1_norm to/from MNI space  
 * ANTS1InverseWarp.nii.gz: Inverse deformable ANTs registration of T1_norm to/from MNI space  
-
-* T1_norm_lin_atlas_2_5.nii.gz: linear transform T1 to MNI   
-* BOLD_d_3D_lin_atlas_2_5.nii.gz: linear transform distorted BOLD in MNI space   
+* T1_norm_lin_atlas_2_5.nii.gz: linear transform T1 to MNI
+* BOLD_d_3D_lin_atlas_2_5.nii.gz: linear transform distorted BOLD in MNI space
 
 The OUTPUTS directory also contains inferences (predictions) for each of five folds utilizing T1_norm_lin_atlas_2_5.nii.gz and BOLD_d_3D_lin_atlas_2_5 as inputs:
 
@@ -128,11 +125,11 @@ After inference the ensemble average is taken in atlas space:
 
 It is then moved to native space for the undistorted, synthetic output:
 
-* BOLD_s_3D.nii.gz: Synthetic BOLD native space                   
+* BOLD_s_3D.nii.gz: Synthetic BOLD native space              
 
 The undistorted synthetic output, and a smoothed distorted input can then be stacked together for topup:
 
-* BOLD_d_3D_smooth.nii.gz: smoothed BOLD_d_3D
+* BOLD_d_3D_smooth.nii.gz: smoothed BOLD_d_3D.nii.gz
 * BOLD_all.nii.gz: stack of BOLD_d_3D_smooth.nii.gz and BOLD_s_3D.nii.gz for input to topup        
 
 Finally, the topup outputs if --notopup is not flagged:
@@ -141,8 +138,7 @@ Finally, the topup outputs if --notopup is not flagged:
 
 * topup_results_movpar.txt: topup parameters
 * topup_results_fieldcoef.nii.gz: topup field coefficients
-
 * BOLD_u.nii.gz: topup applied to BOLD_d_mc (the final distortion corrected BOLD image)
-* BOLD_u_3D.nii.gz: average of BOLD_u.nii.gz   
+* BOLD_u_3D.nii.gz: average of BOLD_u.nii.gz
 
 
