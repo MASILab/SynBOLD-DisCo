@@ -24,7 +24,7 @@ Please use the following citations to refer to this work:
 Tian Yu*, Leon Y. Cai*, Victoria L. Morgan, Sarah E. Goodale, Dario J. Englot, Catherine E. Chang, Bennett A. Landman, and Kurt G. Schilling. "SynBOLD-DisCo: Synthetic BOLD images for distortion correction of fMRI without additional calibration scans". Submitted to SPIE Medical Imaging: Image Processing (2023). *Equal first authorship
 
 ## Dockerized Application
-For deployment we provide a [Docker container](https://hub.docker.com/repository/docker/ytzero/synbold-disco) which uses the trained model to predict the undistorted BOLD image to be used in susceptability distortion correction for functional MRI. For those who prefer, Docker containers can be converted to Singularity containers (see below).
+For deployment we provide a [Docker container](https://hub.docker.com/repository/docker/ytzero/synbold-disco) which uses the trained models to generate a synthetic BOLD image to be used in susceptability distortion correction for functional MRI. For those who prefer, Docker containers can be converted to Singularity containers (see below).
 
 ## Docker Instructions:
 
