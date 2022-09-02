@@ -14,7 +14,7 @@
 
 ## Overview
 
-![Pipeline Overview](https://github.com/MASILab/SynBOLD-DisCo/blob/master/overview.png?raw=true)
+![Overview](https://github.com/MASILab/SynBOLD-DisCo/raw/main/overview.png)
 
 This repository implements the paper "SynBOLD-DisCo: Synthetic BOLD images for distortion correction of fMRI without additional calibration scans". 
 
