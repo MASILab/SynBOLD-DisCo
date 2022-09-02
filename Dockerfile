@@ -43,8 +43,6 @@ ENV ANTSPATH="/opt/ants/bin" \
     LD_LIBRARY_PATH="/opt/ants/lib:$LD_LIBRARY_PATH"
 
 FROM ubuntu:20.04
-ENV PATH="/root/miniconda3/bin:${PATH}"
-ARG PATH="/root/miniconda3/bin:${PATH}"
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -62,17 +60,6 @@ RUN apt-get update && apt-get install -y \
     wget &&\
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
-# miniconda
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh && \
-    mkdir /root/.conda && \
-    bash Miniconda3-py39_4.12.0-Linux-x86_64.sh -b && \
-    rm -f Miniconda3-py39_4.12.0-Linux-x86_64.sh
-
-RUN conda install -c mrtrix3 mrtrix3 && \
-    conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch && \
-    conda install -c conda-forge nibabel && \
-    conda install numpy
     
 #fsl
 RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py && \
@@ -89,6 +76,20 @@ RUN wget https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer
     echo "This is a dummy license file. Please bind your freesurfer license file to this file." > /opt/freesurfer/license.txt &&\
     rm freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz && \
     cd /
+
+# miniconda
+ENV PATH="/opt/miniconda3/bin:${PATH}"
+
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh && \
+    mkdir /opt/.conda && \
+    bash Miniconda3-py39_4.12.0-Linux-x86_64.sh -b -p /opt/miniconda3 && \
+    rm -f Miniconda3-py39_4.12.0-Linux-x86_64.sh
+
+RUN conda install -c mrtrix3 mrtrix3 && \
+    conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch && \
+    conda install -c conda-forge nibabel && \
+    conda install numpy && \
+    conda clean -a -y
 
 # ANTs
 COPY --from=builder /opt/ants /opt/ants
@@ -108,7 +109,6 @@ RUN mkdir /home/INPUTS && \
     mkdir /home/OUTPUTS
 
 COPY src /home
-RUN chmod 777 /home/pipeline.sh
 
 SHELL ["/bin/bash", "-c"]
 ENTRYPOINT ["/home/pipeline.sh"]
