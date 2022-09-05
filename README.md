@@ -80,6 +80,7 @@ Skip the application of FSL's topup susceptibility correction. As a default, we 
 Lets the pipeline know that supplied distorted bold image has already been motion corrected. As a default, we motion correct the distorted image.
 
 **--skull_stripped**
+
 Lets the container know the supplied T1 has already been skull-stripped. As a default, we assume it is not skull stripped. *Please note this feature requires a well-stripped T1 as stripping artifacts can affect performance.*
 
 ## Inputs
