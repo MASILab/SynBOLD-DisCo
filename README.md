@@ -79,15 +79,15 @@ Skip the application of FSL's topup susceptibility correction. As a default, we 
 
 Lets the pipeline know that supplied distorted bold image has already been motion corrected. As a default, we motion correct the distorted image.
 
-**--skull-stripped**
-Lets the container know the supplied T1 has already benn skull-stripped. As a default, we assume it is not skull stripped. *Please note this feature require a well-stripped T1 as stripping artifacts can affect performance*
+**--skull_stripped**
+Lets the container know the supplied T1 has already been skull-stripped. As a default, we assume it is not skull stripped. *Please note this feature requires a well-stripped T1 as stripping artifacts can affect performance.*
 
 ## Inputs
 
 The INPUTS directory must contain the following:
 
 * BOLD_d.nii.gz: the distorted BOLD image, phase encoded on the anterior-posterior axis (either raw 4D, motion corrected 4D, or averaged 3D, see [Flags](#flags))
-* T1.nii.gz: the T1-weighted image (either raw, or skull-stripped, see[Flags](#flags))
+* T1.nii.gz: the T1-weighted image (either raw, or skull-stripped, see [Flags](#flags))
 
 ## Outputs
 
@@ -134,5 +134,3 @@ Finally, the topup outputs if --notopup is not flagged:
 * topup_results_fieldcoef.nii.gz: topup field coefficients
 * BOLD_u.nii.gz: topup applied to BOLD_d_mc (the final distortion corrected BOLD image)
 * BOLD_u_3D.nii.gz: average of BOLD_u.nii.gz
-
-
