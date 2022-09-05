@@ -34,7 +34,7 @@ sudo docker run --rm \
 -v $(pwd)/OUTPUTS:/OUTPUTS/ \
 -v <path to license.txt>:/extra/freesurfer/license.txt \
 --user $(id -u):$(id -g) \
-ytzero/synbold-disco:v1.1
+ytzero/synbold-disco:v1.2
 <flags>
 ```
 
@@ -48,7 +48,7 @@ ytzero/synbold-disco:v1.1
 First, build the synbold-disco.sif container in the current directory:
 
 ```
-singularity pull docker://ytzero/synbold-disco:v1.1
+singularity pull docker://ytzero/synbold-disco:v1.2
 ```
 
 Then, to run the synbold-disco.sif container:
