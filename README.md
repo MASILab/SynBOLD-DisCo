@@ -71,7 +71,7 @@ If you choose to run this in bash, the primary script is located in src/pipeline
 
 ## Flags:
 
-**--notopup**
+**--no_topup**
 
 Skip the application of FSL's topup susceptibility correction. As a default, we run topup for you if the input is 4D.
 
@@ -79,20 +79,15 @@ Skip the application of FSL's topup susceptibility correction. As a default, we 
 
 Lets the pipeline know that supplied distorted bold image has already been motion corrected. As a default, we motion correct the distorted image.
 
+**--skull-stripped**
+Lets the container know the supplied T1 has already benn skull-stripped. As a default, we assume it is not skull stripped. *Please note this feature require a well-stripped T1 as stripping artifacts can affect performance*
+
 ## Inputs
 
 The INPUTS directory must contain the following:
 
-* BOLD_d.nii.gz: the BOLD image (either raw 4D, motion corrected 4D, or averaged 3D, see [Flags](#flags))
-* T1.nii.gz: the T1-weighted image
-* acqparams.txt: A text file that describes the acqusition parameters, and is described in detail on the FslWiki for topup (https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup). Briefly,
-it describes the direction of distortion and tells TOPUP that the synthesized image has an effective echo spacing of 0 (infinite bandwidth). An example acqparams.txt is
-displayed below, in which distortion is in the second dimension, note that the second row corresponds to the synthesized, undistorted, BOLD:
-    ```
-    $ cat acqparams.txt 
-    0 1 0 0.062
-    0 1 0 0.000
-    ```
+* BOLD_d.nii.gz: the distorted BOLD image, phase encoded on the anterior-posterior axis (either raw 4D, motion corrected 4D, or averaged 3D, see [Flags](#flags))
+* T1.nii.gz: the T1-weighted image (either raw, or skull-stripped, see[Flags](#flags))
 
 ## Outputs
 
@@ -135,7 +130,6 @@ The undistorted synthetic output, and a smoothed distorted input can then be sta
 Finally, the topup outputs if --notopup is not flagged:
 
 * BOLD_all_topup.nii.gz: the topped-up version of BOLD_all output from topup
-
 * topup_results_movpar.txt: topup parameters
 * topup_results_fieldcoef.nii.gz: topup field coefficients
 * BOLD_u.nii.gz: topup applied to BOLD_d_mc (the final distortion corrected BOLD image)

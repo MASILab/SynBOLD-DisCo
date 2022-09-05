@@ -2,15 +2,19 @@
 
 TOPUP=true
 motion_corrected=false
+skull_stripped=false
 
 for arg in "$@"
 do
     case $arg in
-        -nt|--notopup)
+        -nt|--no_topup)
             TOPUP=false
-	        ;;
+            ;;
         -mc|--motion_corrected)
             motion_corrected=true
+            ;;
+        -ss|--skull_stripped)
+            skull_stripped=true
             ;;
     esac
 done
@@ -33,14 +37,20 @@ fi
 
 INPUTS_PATH=/home/INPUTS
 RESULTS_PATH=/home/OUTPUTS
-T1_ATLAS_PATH=/home/mni_icbm152_t1_tal_nlin_asym_09c.nii
-T1_ATLAS_2_5_PATH=/home/mni_icbm152_t1_tal_nlin_asym_09c_2_5.nii
+
+if [ $skull_stripped ]; then
+    T1_ATLAS_PATH=/home/mni_icbm152_t1_tal_nlin_asym_09c_mask.nii.gz
+    T1_ATLAS_2_5_PATH=/home/mni_icbm152_t1_tal_nlin_asym_09c_mask_2_5.nii.gz
+else
+    T1_ATLAS_PATH=/home/mni_icbm152_t1_tal_nlin_asym_09c.nii.gz
+    T1_ATLAS_2_5_PATH=/home/mni_icbm152_t1_tal_nlin_asym_09c_2_5.nii.gz
+fi
+
 model_path=/home/Models
 T1_PATH=$INPUTS_PATH/T1.nii.gz
 BOLD_PATH=$RESULTS_PATH/BOLD_d.nii.gz
 BOLD_d_mc=$RESULTS_PATH/BOLD_d_mc.nii.gz
 BOLD_d_3D=$RESULTS_PATH/BOLD_d_3D.nii.gz
-
 
 # always use sform
 cp BOLD_d.nii.gz $BOLD_PATH
@@ -77,8 +87,13 @@ mri_convert ${RESULTS_PATH}/T1_norm.mgz ${RESULTS_PATH}/T1_norm.nii.gz
 
 # Skull strip T1
 echo -------
-echo Skull stripping T1
-bet $T1_PATH ${RESULTS_PATH}/T1_mask.nii.gz -R
+if $skull_stripped; then
+    echo Copying user-provided T1 Mask
+    cp $T1_PATH ${RESULTS_PATH}/T1_mask.nii.gz
+else
+    echo Skull stripping T1
+    bet $T1_PATH ${RESULTS_PATH}/T1_mask.nii.gz -R
+fi
 
 # epi_reg distorted BOLD to T1; wont be perfect since BOLD is distorted
 echo -------
