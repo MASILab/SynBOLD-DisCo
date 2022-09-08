@@ -32,7 +32,7 @@ For deployment we provide a [Docker container](https://hub.docker.com/repository
 sudo docker run --rm \
 -v $(pwd)/INPUTS/:/INPUTS/ \
 -v $(pwd)/OUTPUTS:/OUTPUTS/ \
--v <path to license.txt>:/extra/freesurfer/license.txt \
+-v <path to license.txt>:/opt/freesurfer/license.txt \
 --user $(id -u):$(id -g) \
 ytzero/synbold-disco:v1.2
 <flags>
@@ -42,6 +42,7 @@ ytzero/synbold-disco:v1.2
 * If INPUTS and OUTPUTS are not within your current directory, you will need to change $(pwd)/INPUTS/ to the full path to your input directory, and similarly for OUTPUTS.
 * For Mac users, Docker defaults allows only 2Gb of RAM and 2 cores - we suggest giving Docker access to >8Gb of RAM 
 * Additionally on MAC, if permissions issues prevent binding the path to the license.txt file, we suggest moving the freesurfer license.txt file to the current path and replacing the path line to " $(pwd)/license.txt:/extra/freesurfer/license.txt "
+* \<path to license.txt\> should point to freesurfer license.txt file
 
 ## Singularity Instructions
 
@@ -55,14 +56,16 @@ Then, to run the synbold-disco.sif container:
 
 ```
 singularity run -e \
--B INPUTS/:/INPUTS \
--B OUTPUTS/:/OUTPUTS \
--B <path to license.txt>:/extra/freesurfer/license.txt \
+-B $(pwd)/INPUTS/:/INPUTS \
+-B $(pwd)/OUTPUTS/:/OUTPUTS \
+-B <path to license.txt>:/opt/freesurfer/license.txt \
 <path to synbold-disco.sif>
 <flags>
 ```
 
-* \<path to license.txt\> should point to freesurfer licesnse.txt file
+* If within your current directory you have your INPUTS and OUTPUTS folder, you can run this command copy/paste with the only change being \<path to license.txt\> should point to the freesurfer license.txt file on your system.
+* If INPUTS and OUTPUTS are not within your current directory, you will need to change $(pwd)/INPUTS/ to the full path to your input directory, and similarly for OUTPUTS.
+* \<path to license.txt\> should point to freesurfer license.txt file
 * \<path to synbold-disco.sif\> should point to the singularity container
 
 ## Non-containerized Instructions
