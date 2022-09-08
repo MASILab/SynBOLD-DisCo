@@ -32,37 +32,41 @@ For deployment we provide a [Docker container](https://hub.docker.com/repository
 sudo docker run --rm \
 -v $(pwd)/INPUTS/:/INPUTS/ \
 -v $(pwd)/OUTPUTS:/OUTPUTS/ \
--v <path to license.txt>:/extra/freesurfer/license.txt \
+-v <path to license.txt>:/opt/freesurfer/license.txt \
 --user $(id -u):$(id -g) \
-ytzero/synbold-disco:v1.1
+ytzero/synbold-disco:v1.3
 <flags>
 ```
 
 * If within your current directory you have your INPUTS and OUTPUTS folder, you can run this command copy/paste with the only change being \<path to license.txt\> should point to the freesurfer license.txt file on your system.
 * If INPUTS and OUTPUTS are not within your current directory, you will need to change $(pwd)/INPUTS/ to the full path to your input directory, and similarly for OUTPUTS.
+* \<path to license.txt\> should point to freesurfer license.txt file
 * For Mac users, Docker defaults allows only 2Gb of RAM and 2 cores - we suggest giving Docker access to >8Gb of RAM 
 * Additionally on MAC, if permissions issues prevent binding the path to the license.txt file, we suggest moving the freesurfer license.txt file to the current path and replacing the path line to " $(pwd)/license.txt:/extra/freesurfer/license.txt "
+
 
 ## Singularity Instructions
 
 First, build the synbold-disco.sif container in the current directory:
 
 ```
-singularity pull docker://ytzero/synbold-disco:v1.1
+singularity pull docker://ytzero/synbold-disco:v1.3
 ```
 
 Then, to run the synbold-disco.sif container:
 
 ```
 singularity run -e \
--B INPUTS/:/INPUTS \
--B OUTPUTS/:/OUTPUTS \
--B <path to license.txt>:/extra/freesurfer/license.txt \
+-B $(pwd)/INPUTS/:/INPUTS \
+-B $(pwd)/OUTPUTS/:/OUTPUTS \
+-B <path to license.txt>:/opt/freesurfer/license.txt \
 <path to synbold-disco.sif>
 <flags>
 ```
 
-* \<path to license.txt\> should point to freesurfer licesnse.txt file
+* If within your current directory you have your INPUTS and OUTPUTS folder, you can run this command copy/paste with the only change being \<path to license.txt\> should point to the freesurfer license.txt file on your system.
+* If INPUTS and OUTPUTS are not within your current directory, you will need to change $(pwd)/INPUTS/ to the full path to your input directory, and similarly for OUTPUTS.
+* \<path to license.txt\> should point to freesurfer license.txt file
 * \<path to synbold-disco.sif\> should point to the singularity container
 
 ## Non-containerized Instructions
@@ -79,15 +83,16 @@ Skip the application of FSL's topup susceptibility correction. As a default, we 
 
 Lets the pipeline know that supplied distorted bold image has already been motion corrected. As a default, we motion correct the distorted image.
 
-**--skull-stripped**
-Lets the container know the supplied T1 has already benn skull-stripped. As a default, we assume it is not skull stripped. *Please note this feature require a well-stripped T1 as stripping artifacts can affect performance*
+**--skull_stripped**
+
+Lets the container know the supplied T1 has already been skull-stripped. As a default, we assume it is not skull stripped. *Please note this feature requires a well-stripped T1 as stripping artifacts can affect performance.*
 
 ## Inputs
 
 The INPUTS directory must contain the following:
 
 * BOLD_d.nii.gz: the distorted BOLD image, phase encoded on the anterior-posterior axis (either raw 4D, motion corrected 4D, or averaged 3D, see [Flags](#flags))
-* T1.nii.gz: the T1-weighted image (either raw, or skull-stripped, see[Flags](#flags))
+* T1.nii.gz: the T1-weighted image (either raw, or skull-stripped, see [Flags](#flags))
 
 ## Outputs
 
@@ -134,5 +139,3 @@ Finally, the topup outputs if --notopup is not flagged:
 * topup_results_fieldcoef.nii.gz: topup field coefficients
 * BOLD_u.nii.gz: topup applied to BOLD_d_mc (the final distortion corrected BOLD image)
 * BOLD_u_3D.nii.gz: average of BOLD_u.nii.gz
-
-
