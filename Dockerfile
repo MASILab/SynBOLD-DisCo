@@ -105,8 +105,8 @@ ENV PATH="/opt/c3d-1.0.0-Linux-x86_64/bin:$PATH"
 
 ENV FREESURFER_HOME=/opt/freesurfer
 
-RUN mkdir /home/INPUTS && \
-    mkdir /home/OUTPUTS
+RUN mkdir /INPUTS && \
+    mkdir /OUTPUTS
 
 COPY src /home
 

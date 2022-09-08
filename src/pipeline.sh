@@ -22,7 +22,7 @@ done
 # setup freesurfer
 source $FREESURFER_HOME/SetUpFreeSurfer.sh
 
-cd /home/INPUTS
+cd /INPUTS
 
 # check file existence
 if [ ! -f T1.nii.gz ]; then
@@ -35,8 +35,8 @@ if [ ! -f BOLD_d.nii.gz ]; then
     exit 1
 fi
 
-INPUTS_PATH=/home/INPUTS
-RESULTS_PATH=/home/OUTPUTS
+INPUTS_PATH=/INPUTS
+RESULTS_PATH=/OUTPUTS
 
 if [ $skull_stripped ]; then
     T1_ATLAS_PATH=/home/mni_icbm152_t1_tal_nlin_asym_09c_mask.nii.gz
