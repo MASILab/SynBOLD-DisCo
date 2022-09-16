@@ -15,11 +15,11 @@
 
 ![Overview](https://github.com/MASILab/SynBOLD-DisCo/raw/main/overview.png)
 
-This repository implements the paper "SynBOLD-DisCo: Synthetic BOLD images for distortion correction of fMRI without additional calibration scans". 
+This repository implements the paper ["SynBOLD-DisCo: Synthetic BOLD images for distortion correction of fMRI without additional calibration scans"](https://www.biorxiv.org/content/10.1101/2022.09.13.507794v1).
 
 This tool aims to enable susceptibility distortion correction with historical and/or limited datasets that do not include specific sequences for distortion correction (i.e. reverse phase-encoded scans). In short, we generate a "synthetic, undistorted" BOLD image that matches the geometry of structural T1w images and also matches the contrast. We can then use this synthetic image in standard pipelines (i.e. TOPUP) and tell the algorithm that this synthetic image has an infinite bandwidth. Note that the processing below enables both image synthesis, and also synthesis + full pipeline correction, if desired. 
 
-Please use the following citations to refer to this work:
+Please use the following citation to refer to this work:
 
 Tian Yu*, Leon Y. Cai*, Victoria L. Morgan, Sarah E. Goodale, Dario J. Englot, Catherine E. Chang, Bennett A. Landman, and Kurt G. Schilling. "SynBOLD-DisCo: Synthetic BOLD images for distortion correction of fMRI without additional calibration scans". Submitted to SPIE Medical Imaging: Image Processing (2023). *Equal first authorship
 
