@@ -34,7 +34,7 @@ sudo docker run --rm \
 -v $(pwd)/OUTPUTS:/OUTPUTS/ \
 -v <path to license.txt>:/opt/freesurfer/license.txt \
 --user $(id -u):$(id -g) \
-ytzero/synbold-disco:v1.3
+ytzero/synbold-disco:v1.4
 <flags>
 ```
 
@@ -87,6 +87,19 @@ Lets the pipeline know that supplied distorted bold image has already been motio
 
 Lets the container know the supplied T1 has already been skull-stripped. As a default, we assume it is not skull stripped. *Please note this feature requires a well-stripped T1 as stripping artifacts can affect performance.*
 
+**--no_smoothing**
+
+By default, Gaussian kernel with standard deviation 1.15 mm were applied to BOLD_d to match the smoothness of the synthetic image. This flag alters the default behavior and skip the smoothing step.
+
+**--custom_cnf**
+
+User can configurate their own cnf file for topup
+
+**--total_readout_time**
+
+User can specify readout time by adding a desired number after (with a space) this flag. By default, the readout time of distortion BOLD image is 1. 
+
+
 ## Inputs
 
 The INPUTS directory must contain the following:
@@ -109,6 +122,7 @@ After running, the OUTPUTS directory contains the following preprocessing files:
 * ANTS1InverseWarp.nii.gz: Inverse deformable ANTs registration of T1_norm to/from MNI space  
 * T1_norm_lin_atlas_2_5.nii.gz: linear transform T1 to MNI
 * BOLD_d_3D_lin_atlas_2_5.nii.gz: linear transform distorted BOLD in MNI space
+* output.log: Logs of the pipeline
 
 The OUTPUTS directory also contains inferences (predictions) for each of five folds utilizing T1_norm_lin_atlas_2_5.nii.gz and BOLD_d_3D_lin_atlas_2_5 as inputs:
 
