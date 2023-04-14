@@ -42,7 +42,7 @@ ytzero/synbold-disco:v1.4
 * If INPUTS and OUTPUTS are not within your current directory, you will need to change $(pwd)/INPUTS/ to the full path to your input directory, and similarly for OUTPUTS.
 * \<path to license.txt\> should point to freesurfer license.txt file
 * For Mac users, Docker defaults allows only 2Gb of RAM and 2 cores - we suggest giving Docker access to >8Gb of RAM 
-* Additionally on MAC, if permissions issues prevent binding the path to the license.txt file, we suggest moving the freesurfer license.txt file to the current path and replacing the path line to " $(pwd)/license.txt:/extra/freesurfer/license.txt "
+* Additionally on MAC, if permissions issues prevent binding the path to the license.txt file, we suggest moving the freesurfer license.txt file to the current path and replacing the path line to " $(pwd)/license.txt:/opt/freesurfer/license.txt "
 
 
 ## Singularity Instructions
@@ -50,7 +50,7 @@ ytzero/synbold-disco:v1.4
 First, build the synbold-disco.sif container in the current directory:
 
 ```
-singularity pull docker://ytzero/synbold-disco:v1.3
+singularity pull docker://ytzero/synbold-disco:v1.4
 ```
 
 Then, to run the synbold-disco.sif container:
@@ -77,7 +77,7 @@ If you choose to run this in bash, the primary script is located in src/pipeline
 
 **--no_topup**
 
-Skip the application of FSL's topup susceptibility correction. As a default, we run topup for you if the input is 4D.
+Skip the application of FSL's topup susceptibility correction. As a default, we run topup for you.
 
 **--motion_corrected**
 
@@ -93,11 +93,11 @@ By default, Gaussian kernel with standard deviation 1.15 mm were applied to BOLD
 
 **--custom_cnf**
 
-User can configurate their own cnf file for topup
+User can configurate their own cnf file for topup.
 
 **--total_readout_time**
 
-User can specify readout time by adding a desired number after (with a space) this flag. By default, the readout time of distortion BOLD image is 1. 
+User can specify readout time by adding a desired number after (with a space) this flag. Any argument after this flag will be saved as the new total_readout_time. By default, the readout time of distortion BOLD image is 1. 
 
 
 ## Inputs
@@ -150,6 +150,8 @@ Finally, the topup outputs if --notopup is not flagged:
 
 * BOLD_all_topup.nii.gz: the topped-up version of BOLD_all output from topup
 * topup_results_movpar.txt: topup parameters
+* topup_results_field.nii.gz: The estimated field in Hz. The information is same as topup_results_fieldcoef.nii.gz but
+  this file contains the acutal voxel values.
 * topup_results_fieldcoef.nii.gz: topup field coefficients
 * BOLD_u.nii.gz: topup applied to BOLD_d_mc (the final distortion corrected BOLD image)
 * BOLD_u_3D.nii.gz: average of BOLD_u.nii.gz
