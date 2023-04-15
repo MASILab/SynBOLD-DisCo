@@ -2,7 +2,7 @@
 
 exec &> /OUTPUTS/output.log
 
-total_readout_time=1
+total_readout_time=0.05
 
 TOPUP=true
 motion_corrected=false
