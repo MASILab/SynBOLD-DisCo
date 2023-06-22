@@ -33,6 +33,7 @@ sudo docker run --rm \
 -v $(pwd)/INPUTS/:/INPUTS/ \
 -v $(pwd)/OUTPUTS:/OUTPUTS/ \
 -v <path to license.txt>:/opt/freesurfer/license.txt \
+-v /tmp \
 --user $(id -u):$(id -g) \
 ytzero/synbold-disco:v1.4
 <flags>
@@ -60,6 +61,7 @@ singularity run -e \
 -B $(pwd)/INPUTS/:/INPUTS \
 -B $(pwd)/OUTPUTS/:/OUTPUTS \
 -B <path to license.txt>:/opt/freesurfer/license.txt \
+-v /tmp \
 <path to synbold-disco.sif>
 <flags>
 ```
