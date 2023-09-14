@@ -81,7 +81,7 @@ Skip the application of FSL's topup susceptibility correction. As a default, we 
 
 **--motion_corrected**
 
-Lets the pipeline know that supplied distorted bold image has already been motion corrected. As a default, we motion correct the distorted image.
+Indicates that the supplied distorted BOLD image has already undergone motion correction. By default, our pipeline will apply motion correction to the distorted image. If you wish to preprocess your data prior to this (e.g., slice timing, motion correction, etc.), it is recommended to use this flag.
 
 **--skull_stripped**
 
