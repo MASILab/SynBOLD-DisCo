@@ -99,7 +99,7 @@ User can configurate their own cnf file for topup.
 
 **--total_readout_time**
 
-User can specify readout time by adding a desired number after (with a space) this flag. Any argument after this flag will be saved as the new total_readout_time. By default, the readout time of distortion BOLD image is 1. 
+User can specify readout time, in seconds, by adding a desired number after (with a space) this flag. Any argument after this flag will be saved as the new total_readout_time. By default, the readout time of distortion BOLD image is 0.05. 
 
 
 ## Inputs
