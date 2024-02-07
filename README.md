@@ -28,7 +28,7 @@ For deployment we provide a [Docker container](https://hub.docker.com/repository
 
 ## Docker Instructions:
 
-```
+```bash
 sudo docker run --rm \
 -v $(pwd)/INPUTS/:/INPUTS/ \
 -v $(pwd)/OUTPUTS:/OUTPUTS/ \
@@ -44,6 +44,14 @@ ytzero/synbold-disco:v1.4
 * \<path to license.txt\> should point to freesurfer license.txt file
 * For Mac users, Docker defaults allows only 2Gb of RAM and 2 cores - we suggest giving Docker access to >8Gb of RAM 
 * Additionally on MAC, if permissions issues prevent binding the path to the license.txt file, we suggest moving the freesurfer license.txt file to the current path and replacing the path line to " $(pwd)/license.txt:/opt/freesurfer/license.txt "
+* To customize the pipeline, bind your script to the container and set it as the entry point using the command below. Replace /path/to/host/script with your scripts path in your computer, /path/in/container/script with the desired container path.
+
+```bash
+docker run -v 
+/path/to/host/script:/path/in/container/script 
+--entrypoint /path/in/container/script 
+ytzero/synbold-disco:v1.4
+```
 
 
 ## Singularity Instructions
@@ -56,7 +64,7 @@ singularity pull docker://ytzero/synbold-disco:v1.4
 
 Then, to run the synbold-disco.sif container:
 
-```
+```bash
 singularity run -e \
 -B $(pwd)/INPUTS/:/INPUTS \
 -B $(pwd)/OUTPUTS/:/OUTPUTS \
