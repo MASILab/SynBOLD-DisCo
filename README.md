@@ -15,13 +15,17 @@
 
 ![Overview](https://github.com/MASILab/SynBOLD-DisCo/raw/main/overview.png)
 
-This repository implements the paper ["SynBOLD-DisCo: Synthetic BOLD images for distortion correction of fMRI without additional calibration scans"](https://www.biorxiv.org/content/10.1101/2022.09.13.507794v1).
+This repository implements the paper ["Distortion correction of functional MRI without reverse phase encoding scans or field maps"](https://www.sciencedirect.com/science/article/pii/S0730725X23001121).
 
 This tool aims to enable susceptibility distortion correction with historical and/or limited datasets that do not include specific sequences for distortion correction (i.e. reverse phase-encoded scans). In short, we generate a "synthetic, undistorted" BOLD image that matches the geometry of structural T1w images and also matches the contrast. We can then use this synthetic image in standard pipelines (i.e. TOPUP) and tell the algorithm that this synthetic image has an infinite bandwidth. Note that the processing below enables both image synthesis, and also synthesis + full pipeline correction, if desired. 
 
 Please use the following citation to refer to this work:
 
-Tian Yu*, Leon Y. Cai*, Victoria L. Morgan, Sarah E. Goodale, Dario J. Englot, Catherine E. Chang, Bennett A. Landman, and Kurt G. Schilling. "SynBOLD-DisCo: Synthetic BOLD images for distortion correction of fMRI without additional calibration scans". Submitted to SPIE Medical Imaging: Image Processing (2023). *Equal first authorship
+Tian Yu*, Leon Y. Cai*, Salvatore Torrisi, An Thanh Vu, Victoria L. Morgan, Sarah E. Goodale, Karthik Ramadass, Steven L. Meisler, Jinglei Lv, Aaron EL Warren, Dario J. Englot, Laurie Cutting, Catie Chang, John C. Gore, Bennett A. Landman, and Kurt G. Schilling. 2023. “Distortion Correction of Functional MRI without Reverse Phase Encoding Scans or Field Maps.” Magnetic Resonance Imaging. 103:18–27. doi: 10.1016/j.mri.2023.06.016.
+
+Tian Yu*, Leon Y. Cai*, Victoria L. Morgan, Sarah E. Goodale, Dario J. Englot, Catherine E. Chang, Bennett A. Landman, Kurt G. Schilling, "SynBOLD-DisCo: synthetic BOLD images for distortion correction of fMRI without additional calibration scans," Proc. SPIE 12464, Medical Imaging 2023: Image Processing, 1246417 (3 April 2023); https://doi.org/10.1117/12.2653647
+
+*Equal first authorship
 
 ## Dockerized Application
 For deployment we provide a [Docker container](https://hub.docker.com/repository/docker/ytzero/synbold-disco) which uses the trained models to generate a synthetic BOLD image to be used in susceptability distortion correction for functional MRI. For those who prefer, Docker containers can be converted to Singularity containers (see below).
